@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.freebuff/
+.env
+.DS_Store
