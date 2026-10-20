@@ -1,120 +1,162 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Anton", "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* Single accent: toxic yellow */
-  --color-toxic: #eab308;
-  --color-toxic-dim: #ca8a04;
-
-  /* Orchestrator engine (Claude / Fable 5.1) */
-  --color-claude: #d97706;
-
-  /* Structure */
-  --color-line: #333333;
-  --color-line-dim: #1c1c1c;
-  --color-panel: #0a0a0a;
-  --color-dim: #6b6b6b;
+  --color-paper: #eceae0;
+  --color-paper-raised: #f3f1e8;
+  --color-ink: #17170f;
+  --color-ink-soft: #4c4c40;
+  --color-ink-faint: #8c8a76;
+  --color-colony: #1d33c8;
+  --color-colony-hold: #132596;
+  --color-rule: #c9c7b8;
+  --color-rule-strong: #17170f;
 }
 
-/* Terminal brutalism: nothing gets rounded, ever. */
-* {
-  border-radius: 0 !important;
+/* Dark mode (default): deep charcoal stage, elevated card surfaces with
+   subtle hairline borders, soft-gray copy, and an emerald accent. Every
+   Tailwind utility reads these vars, so all sections invert cleanly. */
+html[data-theme='dark'] {
+  --color-paper: #0d1117;
+  --color-paper-raised: #161b22;
+  --color-ink: #ffffff;
+  --color-ink-soft: #c9d1d9;
+  --color-ink-faint: #8b949e;
+  --color-rule: #21262d;
+  --color-rule-strong: #30363d;
+  --color-colony: #3b4ee0;
+  --color-colony-hold: #2a3cc7;
+}
+
+html[data-theme='dark'] ::-webkit-scrollbar-thumb { background: #21262d; border: 2px solid #0d1117; }
+html[data-theme='dark'] ::-webkit-scrollbar-thumb:hover { background: #30363d; }
+
+/* electric-blue selection */
+html[data-theme='dark'] ::selection {
+  background: rgba(59, 78, 224, 0.35);
+  color: #ffffff;
+}
+
+/* highlighted panels: accent border + soft transparent glow + deeper fill */
+html[data-theme='dark'] .panel-accent {
+  border-color: rgba(59, 78, 224, 0.55);
+  background-color: #1c2128;
+  box-shadow:
+    0 0 0 1px rgba(59, 78, 224, 0.2),
+    0 0 22px rgba(59, 78, 224, 0.12);
+}
+
+/* active card: deep charcoal fill, accent ring, gentle glow */
+html[data-theme='dark'] .card-accent {
+  background-color: #1c2128;
+  box-shadow:
+    0 0 0 1px rgba(59, 78, 224, 0.45),
+    0 0 22px rgba(59, 78, 224, 0.12);
 }
 
 html {
   scroll-behavior: smooth;
 }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 
 body {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background-color: #eab308;
-  color: #000;
+  background: var(--color-colony);
+  color: #f0efe9;
 }
 
 :focus-visible {
-  outline: 1px solid #eab308;
-  outline-offset: 2px;
+  outline: 2px solid var(--color-colony);
+  outline-offset: 3px;
 }
 
-/* Dark scrollbars */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #000;
-}
-::-webkit-scrollbar-thumb {
-  background: #222;
-  border: 2px solid #000;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #333;
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
-/* Faint blueprint grid — flat 1px lines, no glows */
-.grid-bg {
-  background-image: linear-gradient(to right, #0d0d0d 1px, transparent 1px),
-    linear-gradient(to bottom, #0d0d0d 1px, transparent 1px);
-  background-size: 56px 56px;
-}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-paper); }
+::-webkit-scrollbar-thumb { background: #cfccbc; border: 2px solid var(--color-paper); }
+::-webkit-scrollbar-thumb:hover { background: #b8b5a4; }
 
-/* Hazard tape fill for the active phase segment */
-.hazard {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    #eab308 0 8px,
-    #0a0a0a 8px 16px
-  );
-}
+.doc-scene { border-right: 1px solid var(--color-rule-strong); }
 
 @keyframes blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.blink { animation: blink 1.1s step-end infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .blink { animation: none; }
 }
 
 @keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee { animation: marquee 38s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
 }
 
 @keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot { animation: none; opacity: 1; }
+}
+
+@keyframes stage-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+@keyframes stage-stripes {
+  0% { background-position: 0 0; }
+  100% { background-position: 24px 0; }
+}
+.stage-bar-active {
+  background-color: var(--color-colony);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.14) 0px,
+    rgba(255, 255, 255, 0.14) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  background-size: 24px 24px;
+  animation: stage-stripes 1.2s linear infinite;
+}
+.stage-bar-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  animation: stage-shimmer 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-bar-active,
+  .stage-bar-shimmer {
+    animation: none;
   }
-  50% {
-    opacity: 0.25;
-  }
-}
-
-.cursor-blink {
-  animation: blink 1.1s step-end infinite;
-}
-
-.animate-marquee {
-  animation: marquee 36s linear infinite;
-}
-
-.pulse-dot {
-  animation: pulse-dot 1.6s ease-in-out infinite;
 }
